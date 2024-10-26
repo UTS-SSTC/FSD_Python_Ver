@@ -94,8 +94,19 @@ class StudentView(BaseView):
 
             def handle_change_confirm(e):
                 dlg.open = False
+                old_password = old_password_field.value
                 new_password = password_field.value
-                if new_password:
+                confirm_password = confirm_password_field.value
+                if all([old_password, new_password, confirm_password]):
+                    if new_password != confirm_password:
+                        self.display_error("Passwords do not match!")
+                        return
+                    if old_password != self.current_student.password:
+                        self.display_error("Old passwords error!")
+                        return
+                    if new_password == self.current_student.password:
+                        self.display_error("Old passwords cannot be used!")
+                        return
                     if not PASSWORD_PATTERN.match(new_password):
                         self.display_error(
                             "Invalid password format! Must start with uppercase, "
@@ -112,12 +123,28 @@ class StudentView(BaseView):
                     else:
                         self.display_error("Failed to update password in database!")
                 else:
-                    self.display_error("Password cannot be empty!")
+                    self.display_error("All fields are required!")
                 self.page.update()
+
+            old_password_field = ft.TextField(
+                label="Old Password",
+                hint_text="Enter your old password",
+                password=True,
+                can_reveal_password=True,
+                width=300
+            )
 
             password_field = ft.TextField(
                 label="New Password",
                 hint_text="Start with uppercase, 5+ letters, 3+ digits",
+                password=True,
+                can_reveal_password=True,
+                width=300
+            )
+
+            confirm_password_field = ft.TextField(
+                label="Confirm New Password",
+                hint_text="Reenter your new password",
                 password=True,
                 can_reveal_password=True,
                 width=300
@@ -131,7 +158,9 @@ class StudentView(BaseView):
                     ft.Text("• Must contain at least 5 letters"),
                     ft.Text("• Must end with 3 or more digits"),
                     ft.Text("Example: Password123"),
-                    password_field
+                    old_password_field,
+                    password_field,
+                    confirm_password_field
                 ]),
                 actions=[
                     ft.TextButton("Cancel", on_click=handle_cancel),

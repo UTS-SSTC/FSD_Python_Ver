@@ -37,6 +37,14 @@ class LoginView(BaseView):
             width=300,
             visible=False,
         )
+        self.confirm_password_field = ft.TextField(
+            label="Confirm Password",
+            hint_text="Confirm your password",
+            password=True,
+            can_reveal_password=True,
+            width=300,
+            visible=False
+        )
 
         # Create persistent UI elements
         self.mode_text = ft.Text("Login", size=30, text_align=ft.TextAlign.CENTER)
@@ -60,6 +68,7 @@ class LoginView(BaseView):
 
         # Update UI elements
         self.name_field.visible = self.is_register_mode
+        self.confirm_password_field.visible = self.is_register_mode
         self.mode_text.value = "Register" if self.is_register_mode else "Login"
         self.mode_button.text = "Switch to Login" if self.is_register_mode else "Switch to Register"
         self.submit_button.text = "Register" if self.is_register_mode else "Login"
@@ -68,6 +77,7 @@ class LoginView(BaseView):
         self.email_field.value = ""
         self.password_field.value = ""
         self.name_field.value = ""
+        self.confirm_password_field.value = ""
 
         self.page.update()
 
@@ -94,6 +104,7 @@ class LoginView(BaseView):
                             self.name_field,
                             self.email_field,
                             self.password_field,
+                            self.confirm_password_field
                         ],
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                         spacing=10,
@@ -137,8 +148,16 @@ class LoginView(BaseView):
         email = self.email_field.value
         password = self.password_field.value
 
-        if not all([email, password]):
-            self.display_error("All fields are required!")
+        # if not all([email, password]):
+        #     self.display_error("All fields are required!")
+        #     return False
+
+        if not email:
+            self.display_error("Please enter your email.")
+            return False
+
+        if not password:
+            self.display_error("Please enter your password.")
             return False
 
         student = self.database.get_student_by_email(email)
@@ -155,9 +174,14 @@ class LoginView(BaseView):
         name = self.name_field.value
         email = self.email_field.value
         password = self.password_field.value
+        confirm_password = self.confirm_password_field.value
 
-        if not all([name, email, password]):
+        if not all([name, email, password, confirm_password]):
             self.display_error("All fields are required!")
+            return False
+
+        if password != confirm_password:
+            self.display_error("Passwords do not match!")
             return False
 
         # Create a new student instance
