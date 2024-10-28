@@ -58,6 +58,8 @@ class StudentController(BaseController):
             return
         if not self._validate_password(form_data["password"]):
             return
+        if form_data["password"] != form_data["confirm_password"]:
+            return
 
         if self.database.get_student_by_email(form_data["email"]):
             self.view.display_error("Student already exists!")
