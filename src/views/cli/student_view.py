@@ -18,6 +18,7 @@ class StudentCliView(BaseCliView):
             "name": self.get_input("Enter name"),
             "email": self.get_input("Enter email"),
             "password": self.get_input("Enter password"),
+            "confirm_password": self.get_input("Enter confirm password")
         }
 
     def display_login_form(self) -> Dict[str, str]:

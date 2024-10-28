@@ -64,10 +64,25 @@ class SubjectController(BaseController):
 
     def change_password(self):
         """Handle password change."""
+        old_password = self.view.get_input("Enter old password")
         new_password = self.view.get_input("Enter new password")
+        confirm_password = self.view.get_input("Confirm new password")
+
+        if new_password != confirm_password:
+            self.view.display_error("Passwords do not match!")
+            return
+
+        if old_password != self.current_student.password:
+            self.view.display_error("Old passwords error!")
+            return
+
+        if self.current_student.password == new_password:
+            self.view.display_error("Old passwords cannot be used!")
+            return
 
         if not PASSWORD_PATTERN.match(new_password):
-            self.view.display_error("Invalid password format!")
+            self.view.display_error("Invalid password format! Must start with uppercase, \n"
+                                    "contain at least 5 letters followed by 3+ digits")
             return
 
         self.current_student.password = new_password
