@@ -162,4 +162,3 @@ cython_debug/
 .idea/
 /src/students.data
 /src/collected_contents.txt
-/src/file-content-collector.py
