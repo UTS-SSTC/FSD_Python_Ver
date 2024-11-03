@@ -1,4 +1,5 @@
 import flet as ft
+
 from src.views.flet_ui.app_view import AppView
 
 

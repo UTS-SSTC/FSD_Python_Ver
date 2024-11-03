@@ -22,17 +22,13 @@ def main():
         from src.controllers.university_controller import UniversityController
         from src.models.database import Database
 
-        # Set database file path
-        Database.DEFAULT_PATH = str(data_dir / 'students.data')
+        # Set database file path relative to src directory
+        Database.DEFAULT_PATH = "students.data"  # 文件将直接在 src 目录下创建
 
         # Run application
         controller = UniversityController()
         controller.run()
 
-        return 0
-
-    except KeyboardInterrupt:
-        print("\nApplication terminated by user.")
         return 0
     except Exception as e:
         print(f"\nAn unexpected error occurred: {e}")

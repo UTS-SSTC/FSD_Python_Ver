@@ -8,13 +8,16 @@ from src.models.student import Student
 class Database:
     """Handles persistence of student data to/from file storage."""
 
-    def __init__(self, filename: str = "students.data"):
+    DEFAULT_PATH = "students.data"
+
+    def __init__(self, filename: str = None):
         """Initialize database with specified filename."""
-        self.filename = filename
+        self.filename = filename or self.DEFAULT_PATH
         self._ensure_file_exists()
 
     def _ensure_file_exists(self):
         """Create the data file if it doesn't exist."""
+        # No need to create directories, just create file if it doesn't exist
         if not os.path.exists(self.filename):
             with open(self.filename, "w") as f:
                 json.dump([], f)

@@ -1,5 +1,6 @@
 from typing import List, Dict, Any
-from ..base_view import BaseView
+
+from src.views.base_view import BaseView
 
 
 class AdminCliView(BaseView):

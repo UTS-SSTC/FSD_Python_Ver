@@ -1,9 +1,9 @@
 from enum import Enum
 from typing import Dict, List
 
-from .base_controller import BaseController
-from ..models.database import Database
-from ..models.student import Student
+from src.controllers.base_controller import BaseController
+from src.models.database import Database
+from src.models.student import Student
 
 
 class AdminMenuOption(str, Enum):
