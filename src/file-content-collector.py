@@ -4,19 +4,23 @@ import sys
 
 def collect_files_content(output_file='collected_contents.txt', encoding='utf-8'):
     """
-    收集当前目录下所有文件的路径和内容,按指定格式保存到输出文件中
-    格式:
-    <相对路径>
-    <内容>
+    Collect and save the paths and contents of all files in the current directory
+    in a specified format to an output file.
+    Format:
+    <relative_path>
+    <content>
     
     Args:
-        output_file (str): 输出文件名
-        encoding (str): 文件编码,默认utf-8
+        output_file (str): Name of the output file
+        encoding (str): File encoding, defaults to utf-8
     """
 
     def is_binary_file(file_path):
         """
-        检查文件是否是二进制文件
+        Check if a file is binary
+        
+        Returns:
+            bool: True if file is binary, False otherwise
         """
         try:
             with open(file_path, 'r', encoding=encoding) as f:
@@ -27,40 +31,44 @@ def collect_files_content(output_file='collected_contents.txt', encoding='utf-8'
 
     def write_file_content(file_path, out_file):
         """
-        将单个文件的路径和内容写入输出文件
+        Write a single file's path and content to the output file
+        
+        Args:
+            file_path (str): Path to the file to process
+            out_file (file): Output file handle to write to
         """
         rel_path = os.path.relpath(file_path)
 
-        # 跳过输出文件本身
+        # Skip the output file itself
         if rel_path == output_file:
             return
 
         out_file.write(f"<{rel_path}>\n")
 
-        # 检查是否为二进制文件
+        # Check if file is binary
         if is_binary_file(file_path):
-            out_file.write("[二进制文件,内容已忽略]\n")
+            out_file.write("[Binary file, content skipped]\n")
         else:
             try:
                 with open(file_path, 'r', encoding=encoding) as f:
                     content = f.read()
                     out_file.write(f"{content}\n")
             except Exception as e:
-                out_file.write(f"[读取文件失败: {str(e)}]\n")
+                out_file.write(f"[Failed to read file: {str(e)}]\n")
 
-        out_file.write("\n")  # 在每个文件记录之间添加空行
+        out_file.write("\n")  # Add blank line between file records
 
-    # 获取所有文件路径并排序，确保输出顺序一致
+    # Get all file paths and sort them to ensure consistent output order
     all_files = []
     for root, dirs, files in os.walk('.'):
         for file in files:
-            if file != output_file:  # 排除输出文件
+            if file != output_file:  # Exclude output file
                 file_path = os.path.join(root, file)
                 all_files.append(file_path)
 
-    all_files.sort()  # 对文件路径进行排序
+    all_files.sort()  # Sort file paths
 
-    # 写入所有文件内容
+    # Write all file contents to output file
     with open(output_file, 'w', encoding=encoding) as out_file:
         for file_path in all_files:
             write_file_content(file_path, out_file)
@@ -68,12 +76,12 @@ def collect_files_content(output_file='collected_contents.txt', encoding='utf-8'
 
 if __name__ == "__main__":
     try:
-        # 可以通过命令行参数指定输出文件名和编码
+        # Output file name and encoding can be specified via command line arguments
         output_file = sys.argv[1] if len(sys.argv) > 1 else 'collected_contents.txt'
         encoding = sys.argv[2] if len(sys.argv) > 2 else 'utf-8'
 
         collect_files_content(output_file, encoding)
-        print(f"文件内容已收集到: {output_file}")
+        print(f"File contents collected to: {output_file}")
 
     except Exception as e:
-        print(f"错误: {str(e)}")
+        print(f"Error: {str(e)}")
