@@ -464,7 +464,7 @@ class AdminView(BaseView):
         subject_rows = []
 
         if student.subjects:
-            for subject in subject.subjects:
+            for subject in student.subjects:
                 # Create a container for each subject with header and details
                 subject_info = ft.Container(
                     content=ft.Column([
